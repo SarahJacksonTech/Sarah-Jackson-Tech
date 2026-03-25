@@ -1,0 +1,62 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def create_phantom(size):
+    """
+    Create a simple circular phantom (like a cross-section of tissue).
+    """
+    phantom = np.zeros((size, size))
+    center = size // 2
+
+    for i in range(size):
+        for j in range(size):
+            # Distance from center
+            r = np.sqrt((i - center)**2 + (j - center)**2)
+
+            # Outer tissue
+            if r < size * 0.4:
+                phantom[i, j] = 0.5
+
+            # Inner denser region (like bone)
+            if r < size * 0.2:
+                phantom[i, j] = 1.0
+
+    return phantom
+
+def simulate_projection(phantom, angle):
+    """
+    Simulate a simple projection by rotating and summing (Radon-like).
+    """
+    rotated = np.rot90(phantom, k=angle // 90)  # simple rotation (0,90,180,270)
+    projection = np.sum(rotated, axis=0)
+    return projection
+
+def main():
+    size = 100
+    phantom = create_phantom(size)
+
+    angles = [0, 90, 180, 270]
+    projections = []
+
+    for angle in angles:
+        proj = simulate_projection(phantom, angle)
+        projections.append(proj)
+
+    # Plot results
+    plt.figure(figsize=(10, 4))
+
+    plt.subplot(1, 2, 1)
+    plt.title("Phantom (Object)")
+    plt.imshow(phantom, cmap='gray')
+    plt.colorbar()
+
+    plt.subplot(1, 2, 2)
+    plt.title("Projections")
+    for proj in projections:
+        plt.plot(proj)
+
+    plt.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    main()
