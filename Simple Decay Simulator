@@ -1,0 +1,31 @@
+import math
+
+def remaining_activity(A0, half_life, time):
+    """
+    Calculate remaining activity using radioactive decay formula.
+
+    A0: initial activity (e.g., in MBq)
+    half_life: half-life of the isotope (in hours)
+    time: time elapsed (in hours)
+    """
+    decay_constant = math.log(2) / half_life
+    A = A0 * math.exp(-decay_constant * time)
+    return A
+
+def main():
+    print("Radioactive Decay Calculator")
+
+    try:
+        A0 = float(input("Enter initial activity (MBq): "))
+        half_life = float(input("Enter half-life (hours): "))
+        time = float(input("Enter time elapsed (hours): "))
+
+        A = remaining_activity(A0, half_life, time)
+
+        print(f"\nRemaining activity after {time} hours: {A:.2f} MBq")
+
+    except ValueError:
+        print("Please enter valid numerical values.")
+
+if __name__ == "__main__":
+    main()
